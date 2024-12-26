@@ -4,6 +4,7 @@ import connectDB from './config/db'
 import cors from 'cors'
 import authRoutes from './routes/auth'
 import transporter from './config/transporter'
+import taskRoutes from './routes/tasks'
 
 dotenv.config()
 console.log('SMTP_HOST:', process.env.SMTP_HOST)
@@ -30,6 +31,8 @@ connectDB()
 
 // Mount the auth routes
 app.use('/api/auth', authRoutes)
+
+app.use('/api/tasks', taskRoutes)
 
 // Start Server
 const PORT = process.env.PORT || 5001
