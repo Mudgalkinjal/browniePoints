@@ -44,7 +44,7 @@ const Signinpage = () => {
         body: JSON.stringify(data),
       })
 
-      const responseData = await response.json() // Parse the response JSON
+      const responseData = await response.json()
 
       if (response.ok) {
         localStorage.setItem('authToken', responseData.token) // Store the token

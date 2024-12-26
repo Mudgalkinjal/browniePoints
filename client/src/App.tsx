@@ -5,6 +5,8 @@ import Homepage from './pages/Homepage'
 import SignUpPage from './pages/SignUpPage'
 import Signinpage from './pages/Signinpage'
 import Apppage from './pages/Apppage'
+import AddBrownie from './pages/AddBrowniePage'
+
 import VerifyEmail from './pages/VerifyEmail'
 import ProtectedRoute from './components/ProtectedRoutes'
 
@@ -20,6 +22,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Apppage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/add-brownie"
+          element={
+            <ProtectedRoute>
+              <AddBrownie />
             </ProtectedRoute>
           }
         />

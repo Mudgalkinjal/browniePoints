@@ -54,7 +54,6 @@ const SignUpPage = () => {
         },
         body: JSON.stringify(data),
       })
-      console.log('here')
 
       const responseData = await response.json()
 
