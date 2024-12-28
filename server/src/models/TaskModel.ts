@@ -6,6 +6,7 @@ interface ITask extends Document {
   browniePoints: number
   isTop3Day: boolean
   isTop3Week: boolean
+  isCompleted: boolean
   createdBy: mongoose.Schema.Types.ObjectId
 }
 
@@ -16,6 +17,7 @@ const TaskSchema: Schema = new Schema(
     browniePoints: { type: Number, required: true },
     isTop3Day: { type: Boolean, default: false },
     isTop3Week: { type: Boolean, default: false },
+    isCompleted: { type: Boolean, default: false },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',

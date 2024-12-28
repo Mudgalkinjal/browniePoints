@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import { useNavigate } from 'react-router-dom'
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001'
 
 type SigninData = {
   email: string
@@ -36,7 +37,7 @@ const Signinpage = () => {
     setSuccess('')
 
     try {
-      const response = await fetch('http://localhost:5001/api/auth/signin', {
+      const response = await fetch(`${API_URL}/api/auth/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

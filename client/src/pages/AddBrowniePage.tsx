@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001'
 
 const AddBrowniePage = () => {
   const [formData, setFormData] = useState({
@@ -34,7 +35,7 @@ const AddBrowniePage = () => {
     setErrorMessage('')
 
     try {
-      const response = await fetch('http://localhost:5001/api/tasks/create', {
+      const response = await fetch(`${API_URL}/api/tasks/create`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
