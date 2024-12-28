@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001'
 
 const AppPage = () => {
   const [userData, setUserData] = useState<{
@@ -13,6 +14,10 @@ const AppPage = () => {
     navigate('/add-brownie')
   }
 
+  function handleList() {
+    navigate('/task-list')
+  }
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -20,16 +25,13 @@ const AppPage = () => {
         if (!token) {
           throw new Error('No token found')
         }
-        const response = await fetch(
-          'http://localhost:5001/api/auth/protected',
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        )
+        const response = await fetch(`${API_URL}/api/auth/protected`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        })
 
         if (!response.ok) {
           throw new Error('Failed to fetch user data')
@@ -136,9 +138,15 @@ const AppPage = () => {
         <footer className="mt-12 text-center">
           <button
             onClick={handleAddBrownie}
-            className="px-6 py-3 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition"
+            className="px-4 py-3 m-4 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition"
           >
             Start Adding Brownies!
+          </button>
+          <button
+            onClick={handleList}
+            className="px-4 py-3 m-4 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition"
+          >
+            Go to your List
           </button>
         </footer>
       </div>

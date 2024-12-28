@@ -6,6 +6,7 @@ import SignUpPage from './pages/SignUpPage'
 import Signinpage from './pages/Signinpage'
 import Apppage from './pages/Apppage'
 import AddBrownie from './pages/AddBrowniePage'
+import TaskList from './pages/TaskList'
 
 import VerifyEmail from './pages/VerifyEmail'
 import ProtectedRoute from './components/ProtectedRoutes'
@@ -30,6 +31,14 @@ function App() {
           element={
             <ProtectedRoute>
               <AddBrownie />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/task-list"
+          element={
+            <ProtectedRoute>
+              <TaskList />
             </ProtectedRoute>
           }
         />
