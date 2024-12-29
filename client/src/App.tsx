@@ -6,16 +6,17 @@ import SignUpPage from './pages/SignUpPage'
 import Signinpage from './pages/Signinpage'
 import Apppage from './pages/Apppage'
 import AddBrownie from './pages/AddBrowniePage'
-import TaskList from './pages/TaskList'
+import TaskList from './pages/TaskManager'
 
 import VerifyEmail from './pages/VerifyEmail'
 import ProtectedRoute from './components/ProtectedRoutes'
+import DynamicRoute from './components/DynamicRoutes'
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Homepage />} />
+        <Route path="/" element={<DynamicRoute />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/signin" element={<Signinpage />} />
         <Route
