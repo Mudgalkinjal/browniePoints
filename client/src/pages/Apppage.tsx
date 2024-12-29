@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Header from '../components/Header'
+
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001'
 
 const AppPage = () => {
@@ -41,6 +43,7 @@ const AppPage = () => {
         setUserData({ name: data.user.name, email: data.user.email })
       } catch (error) {
         console.error('Error fetching user data:', error)
+        navigate('/signin')
       } finally {
         setLoading(false)
       }
@@ -58,7 +61,9 @@ const AppPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10">
+    <div className="min-h-screen bg-gray-50 pb-10">
+      <Header />
+
       <div className="max-w-4xl mx-auto px-4">
         {/* Header */}
         <header className="mb-8">
@@ -69,6 +74,14 @@ const AppPage = () => {
             Your email: <strong>{userData.email}</strong>
           </p>
         </header>
+        <div className="flex justify-center">
+          <button
+            onClick={handleList}
+            className="px-4 py-3 m-4 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition"
+          >
+            Go to your List
+          </button>
+        </div>
 
         {/* Hero Section */}
         <section className="bg-white shadow-lg rounded-lg p-8 mb-8">
@@ -133,22 +146,6 @@ const AppPage = () => {
             </p>
           </div>
         </section>
-
-        {/* Call to Action */}
-        <footer className="mt-12 text-center">
-          <button
-            onClick={handleAddBrownie}
-            className="px-4 py-3 m-4 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition"
-          >
-            Start Adding Brownies!
-          </button>
-          <button
-            onClick={handleList}
-            className="px-4 py-3 m-4 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition"
-          >
-            Go to your List
-          </button>
-        </footer>
       </div>
     </div>
   )

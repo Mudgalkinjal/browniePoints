@@ -7,7 +7,9 @@ const HomePage = () => {
     navigate('/signup')
   }
   function handleSignInNavigate() {
-    navigate('/signin')
+    const authCode = localStorage.getItem('authToken')
+    console.log(authCode)
+    !authCode ? navigate('/signin') : navigate('/app')
   }
   return (
     <div className="font-sans">
