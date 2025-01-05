@@ -5,8 +5,9 @@ import cors from 'cors'
 import authRoutes from './routes/auth'
 import transporter from './config/transporter'
 import taskRoutes from './routes/tasks'
-
+//import dotenv from 'dotenv'
 dotenv.config()
+//process.env.PORT
 console.log('SMTP_HOST:', process.env.SMTP_HOST)
 console.log('PORT:', process.env.PORT)
 console.log('EMAIL_USER:', process.env.EMAIL_USER)
