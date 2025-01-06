@@ -57,7 +57,7 @@ const AppPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-10">
+    <div className="min-h-screen bg-[#F7F3EE] pb-10">
       <Header />
 
       <div className="max-w-4xl mx-auto px-4">
@@ -73,7 +73,7 @@ const AppPage = () => {
         <div className="flex justify-center">
           <button
             onClick={handleList}
-            className="px-4 py-3 m-4 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition"
+            className="px-4 py-3 m-4 bg-[#D4E4DB] text-gray-700 rounded-lg shadow-md hover:bg-gray-300 hover:shadow-lg transition-all duration-200"
           >
             Go to your List
           </button>
@@ -81,23 +81,28 @@ const AppPage = () => {
 
         {/* Hero Section */}
         <section className="bg-white shadow-lg rounded-lg p-8 mb-8">
-          <h2 className="text-2xl font-bold text-green-500 mb-4 text-center">
+          <h2 className="text-2xl font-bold text-black-400 mb-4 text-center">
             Why Brownie Points?
           </h2>
           <p className="text-gray-700 leading-relaxed">
-            **Brownie Points** is your companion for boosting productivity,
-            helping you achieve your goals while making the process fun and
-            rewarding. By gamifying your tasks, Brownie Points keeps you
-            motivated and focused.
+            <strong>Brownie Points</strong> is your companion for boosting
+            productivity, helping you achieve your goals while making the
+            process fun and rewarding. By gamifying your tasks, Brownie Points
+            keeps you motivated and focused.
           </p>
           <ul className="list-disc list-inside mt-4 text-gray-700">
             <li>
-              **Set achievable goals** and track your progress step-by-step.
+              <strong>Set achievable goals</strong> and track your progress
+              step-by-step.
             </li>
             <li>
-              **Earn rewards** for completing tasks to keep you motivated.
+              <strong>Earn rewards</strong> for completing tasks to keep you
+              motivated.
             </li>
-            <li>**Visualize success** with brownie-themed achievements.</li>
+            <li>
+              <strong>Visualize success</strong> with brownie-themed
+              achievements.
+            </li>
             <li>Stay consistent with reminders and daily points.</li>
           </ul>
         </section>

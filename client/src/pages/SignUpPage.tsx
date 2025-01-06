@@ -70,9 +70,9 @@ const SignUpPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="min-h-screen bg-[#F7F3EE] flex items-center justify-center">
       <div className="w-full max-w-md bg-white p-8 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-bold text-center text-green-500 mb-6">
+        <h2 className="text-2xl font-bold text-center text-black-400 mb-6">
           Sign Up
         </h2>
 
@@ -98,7 +98,7 @@ const SignUpPage = () => {
               {...register('name')}
               className={`mt-1 block w-full px-4 py-2 border rounded-lg ${
                 errors.name ? 'border-red-500' : 'border-gray-300'
-              } focus:ring focus:ring-green-200`}
+              } focus:ring focus:ring-[#D4E4DB]`}
             />
             {errors.name && (
               <p className="text-red-500 text-sm">{errors.name.message}</p>
@@ -119,7 +119,7 @@ const SignUpPage = () => {
               {...register('email')}
               className={`mt-1 block w-full px-4 py-2 border rounded-lg ${
                 errors.email ? 'border-red-500' : 'border-gray-300'
-              } focus:ring focus:ring-green-200`}
+              } focus:ring focus:ring-[#D4E4DB]`}
             />
             {errors.email && (
               <p className="text-red-500 text-sm">{errors.email.message}</p>
@@ -140,7 +140,7 @@ const SignUpPage = () => {
               {...register('password')}
               className={`mt-1 block w-full px-4 py-2 border rounded-lg ${
                 errors.password ? 'border-red-500' : 'border-gray-300'
-              } focus:ring focus:ring-green-200`}
+              } focus:ring focus:ring-[#D4E4DB]`}
             />
             {errors.password && (
               <p className="text-red-500 text-sm">{errors.password.message}</p>
@@ -161,7 +161,7 @@ const SignUpPage = () => {
               {...register('confirmPassword')}
               className={`mt-1 block w-full px-4 py-2 border rounded-lg ${
                 errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
-              } focus:ring focus:ring-green-200`}
+              } focus:ring focus:ring-[#D4E4DB]`}
             />
             {errors.confirmPassword && (
               <p className="text-red-500 text-sm">
@@ -173,7 +173,7 @@ const SignUpPage = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
+            className="w-full bg-[#D4E4DB] text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 hover:text-gray-900 transition-all duration-200 shadow-md"
           >
             Sign Up
           </button>
@@ -181,7 +181,7 @@ const SignUpPage = () => {
         {/* Sign In Button */}
         <button
           onClick={handleSignInNavigate}
-          className="w-full mt-4 bg-gray-100 text-green-500 py-2 px-4 rounded-lg hover:bg-gray-200"
+          className="w-full mt-4 bg-gray-100 text-black-400 py-2 px-4 rounded-lg hover:bg-gray-200 hover:text-gray-900 transition-all duration-200"
         >
           Already have an account? Sign In
         </button>

@@ -62,9 +62,9 @@ const Signinpage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="min-h-screen bg-[#F7F3EE] flex items-center justify-center">
       <div className="w-full max-w-md bg-white p-8 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-bold text-center text-green-500 mb-6">
+        <h2 className="text-2xl font-bold text-center text-black-400 mb-6">
           Sign In
         </h2>
         {/* Error Message */}
@@ -89,7 +89,7 @@ const Signinpage = () => {
               {...register('email')}
               className={`mt-1 block w-full px-4 py-2 border rounded-lg ${
                 errors.email ? 'border-red-500' : 'border-gray-300'
-              } focus:ring focus:ring-green-200`}
+              } focus:ring focus:ring-[#D4E4DB]`}
             />
             {errors.email && (
               <p className="text-red-500 text-sm">{errors.email.message}</p>
@@ -110,7 +110,7 @@ const Signinpage = () => {
               {...register('password')}
               className={`mt-1 block w-full px-4 py-2 border rounded-lg ${
                 errors.password ? 'border-red-500' : 'border-gray-300'
-              } focus:ring focus:ring-green-200`}
+              } focus:ring focus:ring-[#D4E4DB]`}
             />
             {errors.password && (
               <p className="text-red-500 text-sm">{errors.password.message}</p>
@@ -120,7 +120,7 @@ const Signinpage = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
+            className="w-full bg-[#D4E4DB] text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 hover:text-gray-900 transition-all duration-200"
           >
             Sign In
           </button>
