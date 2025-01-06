@@ -29,10 +29,20 @@ const AddBrowniePage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     const token = localStorage.getItem('authToken')
-
     e.preventDefault()
+
+    // Reset messages
     setSuccessMessage('')
     setErrorMessage('')
+
+    // Log the form data
+    console.log('Submitting:', formData)
+
+    // Validate formData
+    if (!formData.task || !formData.category || formData.browniePoints < 1) {
+      setErrorMessage('Please fill out all required fields correctly.')
+      return
+    }
 
     try {
       const response = await fetch(`${API_URL}/api/tasks/create`, {
@@ -46,19 +56,22 @@ const AddBrowniePage = () => {
 
       if (response.ok) {
         const data = await response.json()
+        console.log('Success Response:', data)
         setSuccessMessage('Task added successfully!')
         setFormData({
           task: '',
           category: '',
-          browniePoints: 0,
+          browniePoints: 1, // Reset to default valid value
           top3Day: false,
           top3Week: false,
         })
       } else {
         const errorData = await response.json()
+        console.error('Error Response:', errorData)
         setErrorMessage(errorData.message || 'Failed to add task')
       }
     } catch (error) {
+      console.error('Request Error:', error)
       setErrorMessage('An error occurred. Please try again.')
     }
   }

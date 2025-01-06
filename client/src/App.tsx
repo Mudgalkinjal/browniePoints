@@ -19,6 +19,8 @@ function App() {
         <Route path="/" element={<DynamicRoute />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/signin" element={<Signinpage />} />
+        <Route path="/homepage" element={<Homepage />} />
+
         <Route
           path="/app"
           element={

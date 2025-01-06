@@ -12,10 +12,6 @@ const AppPage = () => {
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
 
-  function handleAddBrownie() {
-    navigate('/add-brownie')
-  }
-
   function handleList() {
     navigate('/task-list')
   }
