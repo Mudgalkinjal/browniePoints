@@ -18,6 +18,10 @@ const User_1 = __importDefault(require("../models/User"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const transporter_1 = __importDefault(require("../config/transporter"));
 const authMiddleware_1 = __importDefault(require("../middleware/authMiddleware"));
+const userHelpers_1 = require("../utils/userHelpers");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+//${process.env.CLIENT_URL}
 const router = express_1.default.Router();
 // Example route
 router.get('/', (req, res) => {
@@ -39,7 +43,7 @@ router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function*
             isVerified: false,
         });
         const token = jsonwebtoken_1.default.sign({ email }, process.env.JWT_SECRET || 'your_secret', {
-            expiresIn: '1h',
+            expiresIn: '1h', // Token expires in 1 hour
         });
         const verificationUrl = `${process.env.BASE_URL}/api/auth/verify-email?token=${token}`;
         const mailOptions = {
@@ -70,24 +74,24 @@ router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function*
 router.get('/verify-email', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { token } = req.query;
     if (!token) {
-        return res.redirect('http://localhost:3000/verify-email?status=error');
+        return res.redirect(`${process.env.CLIENT_URL}/verify-email?status=error`);
     }
     try {
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET || 'your_secret');
         const email = decoded.email;
         const user = yield User_1.default.findOne({ email });
         if (!user) {
-            return res.redirect('http://localhost:3000/verify-email?status=user-not-found');
+            return res.redirect(`${process.env.CLIENT_URL}/verify-email?status=user-not-found`);
         }
         if (user.isVerified) {
-            return res.redirect('http://localhost:3000/verify-email?status=already-verified');
+            return res.redirect(`${process.env.CLIENT_URL}/verify-email?status=already-verified`);
         }
         user.isVerified = true;
         yield user.save();
-        return res.redirect('http://localhost:3000/verify-email?status=success');
+        return res.redirect(`${process.env.CLIENT_URL}/verify-email?status=success`);
     }
     catch (error) {
-        return res.redirect('http://localhost:3000/verify-email?status=invalid-token');
+        return res.redirect(`${process.env.CLIENT_URL}/verify-email?status=invalid-token`);
     }
 }));
 // Sign In Route
@@ -111,10 +115,23 @@ router.post('/signin', (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(500).json({ message: 'Server error' });
     }
 }));
-router.get('/protected', authMiddleware_1.default, (req, res) => {
-    res.json({
-        message: 'Access granted',
-        user: req.user,
-    });
-});
+router.get('/protected', authMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const email = (_a = req.user) === null || _a === void 0 ? void 0 : _a.email;
+        if (!email) {
+            return res.status(400).json({ message: 'Email not found in request' });
+        }
+        const user = yield (0, userHelpers_1.getUserDataByEmail)(email);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        // Send response only once
+        return res.json({ message: 'Access granted', user });
+    }
+    catch (error) {
+        console.error('Error fetching user data:', error);
+        return res.status(500).json({ message: 'Server error' });
+    }
+}));
 exports.default = router;
