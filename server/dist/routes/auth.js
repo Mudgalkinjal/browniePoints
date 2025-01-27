@@ -23,12 +23,14 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 //${process.env.CLIENT_URL}
 const router = express_1.default.Router();
+console.log('inside sign up');
 // Example route
 router.get('/', (req, res) => {
     res.send('Auth endpoint is working');
 });
 // Sign Up Route
 router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('inside sign up route');
     const { name, email, password } = req.body;
     try {
         const existingUser = yield User_1.default.findOne({ email });

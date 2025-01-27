@@ -7,16 +7,10 @@ const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const db_1 = __importDefault(require("./config/db"));
 const cors_1 = __importDefault(require("cors"));
-const auth_1 = __importDefault(require("./routes/auth"));
 const transporter_1 = __importDefault(require("./config/transporter"));
+const auth_1 = __importDefault(require("./routes/auth"));
 const tasks_1 = __importDefault(require("./routes/tasks"));
-//import dotenv from 'dotenv'
 dotenv_1.default.config();
-//process.env.PORT
-console.log('SMTP_HOST:', process.env.SMTP_HOST);
-console.log('PORT:', process.env.PORT);
-console.log('EMAIL_USER:', process.env.EMAIL_USER);
-console.log('EMAIL_PASS:', process.env.EMAIL_PASS ? 'Loaded' : 'Missing');
 transporter_1.default.verify((error, success) => {
     if (error) {
         console.error('SMTP connection error:', error);
@@ -31,6 +25,7 @@ app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 // Connect to Database
 (0, db_1.default)();
+console.log('after db connect');
 // Mount the auth routes
 app.use('/api/auth', auth_1.default);
 app.use('/api/tasks', tasks_1.default);
