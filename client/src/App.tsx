@@ -10,13 +10,12 @@ import TaskList from './pages/TaskManager'
 
 import VerifyEmail from './pages/VerifyEmail'
 import ProtectedRoute from './components/ProtectedRoutes'
-import DynamicRoute from './components/DynamicRoutes'
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<DynamicRoute />} />
+        <Route path="/" element={<Homepage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/signin" element={<Signinpage />} />
         <Route path="/homepage" element={<Homepage />} />
@@ -48,10 +47,6 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmail />} />
       </Routes>
     </Router>
-    // <div className="App">
-    //   {' '}
-    //   <Homepage />
-    // </div>
   )
 }
 

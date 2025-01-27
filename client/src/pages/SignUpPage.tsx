@@ -45,6 +45,7 @@ const SignUpPage = () => {
   })
 
   const onSubmit = async (data: SignUpFormData) => {
+    console.log(API_URL)
     setError('')
     setSuccess('')
     try {

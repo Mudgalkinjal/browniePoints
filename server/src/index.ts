@@ -2,16 +2,10 @@ import express from 'express'
 import dotenv from 'dotenv'
 import connectDB from './config/db'
 import cors from 'cors'
-import authRoutes from './routes/auth'
 import transporter from './config/transporter'
+import authRoutes from './routes/auth'
 import taskRoutes from './routes/tasks'
-//import dotenv from 'dotenv'
 dotenv.config()
-//process.env.PORT
-console.log('SMTP_HOST:', process.env.SMTP_HOST)
-console.log('PORT:', process.env.PORT)
-console.log('EMAIL_USER:', process.env.EMAIL_USER)
-console.log('EMAIL_PASS:', process.env.EMAIL_PASS ? 'Loaded' : 'Missing')
 
 transporter.verify((error, success) => {
   if (error) {
@@ -29,7 +23,7 @@ app.use(express.json())
 
 // Connect to Database
 connectDB()
-
+console.log('after db connect')
 // Mount the auth routes
 app.use('/api/auth', authRoutes)
 

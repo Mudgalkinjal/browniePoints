@@ -10,6 +10,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 //${process.env.CLIENT_URL}
 const router = express.Router()
+console.log('inside sign up')
 
 // Example route
 router.get('/', (req: Request, res: Response) => {
@@ -18,6 +19,8 @@ router.get('/', (req: Request, res: Response) => {
 
 // Sign Up Route
 router.post('/signup', async (req: Request, res: Response) => {
+  console.log('inside sign up route')
+
   const { name, email, password } = req.body
   try {
     const existingUser = await User.findOne({ email })
