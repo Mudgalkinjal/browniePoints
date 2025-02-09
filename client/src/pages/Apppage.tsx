@@ -46,7 +46,7 @@ const AppPage = () => {
     }
 
     fetchUserData()
-  }, [])
+  }, [navigate])
 
   if (loading) {
     return <div>Loading...</div>
