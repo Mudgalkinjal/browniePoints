@@ -5,14 +5,12 @@ const connectDB = async () => {
     const mongoURI =
       process.env.MONGO_URI || 'your_mongodb_connection_string_here'
 
-    // Log a warning if the default placeholder is used
     if (mongoURI === 'your_mongodb_connection_string_here') {
       console.warn(
         'MONGO_URI is not defined. Using placeholder connection string.'
       )
     }
 
-    // Attempt connection
     await mongoose.connect(mongoURI, {})
     console.log('MongoDB connected successfully')
   } catch (error) {

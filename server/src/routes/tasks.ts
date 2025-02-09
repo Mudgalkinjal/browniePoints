@@ -8,7 +8,6 @@ router.post('/create', authenticate, async (req, res) => {
   try {
     const { task, category, browniePoints, isTop3Day, isTop3Week } = req.body
 
-    // Ensure all required fields are present
     if (!task || !category || browniePoints === undefined) {
       return res.status(400).json({ message: 'Missing required fields' })
     }
@@ -23,7 +22,7 @@ router.post('/create', authenticate, async (req, res) => {
     })
 
     await newTask.save()
-    res.status(201).json(newTask) // Send back the created task
+    res.status(201).json(newTask)
   } catch (error) {
     console.error('Error creating task:', error)
     res.status(500).json({ message: 'Server error' })
@@ -31,7 +30,6 @@ router.post('/create', authenticate, async (req, res) => {
 })
 
 // ((req as any).user as { userId: string }).userId,
-// Fetch All Tasks
 router.get('/', async (req: Request, res: Response) => {
   try {
     const tasks = await Task.find()
@@ -68,7 +66,6 @@ router.delete('/:id', authenticate, async (req: Request, res: Response) => {
   try {
     const { id } = req.params
 
-    // Find and delete the task by its ID
     const deletedTask = await Task.findByIdAndDelete(id)
 
     if (!deletedTask) {

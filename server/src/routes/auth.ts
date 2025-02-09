@@ -8,16 +8,13 @@ import authenticate from '../middleware/authMiddleware'
 import { getUserDataByEmail } from '../utils/userHelpers'
 import dotenv from 'dotenv'
 dotenv.config()
-//${process.env.CLIENT_URL}
 const router = express.Router()
 console.log('inside sign up')
 
-// Example route
 router.get('/', (req: Request, res: Response) => {
   res.send('Auth endpoint is working')
 })
 
-// Sign Up Route
 router.post('/signup', async (req: Request, res: Response) => {
   console.log('inside sign up route')
 
@@ -59,7 +56,6 @@ router.post('/signup', async (req: Request, res: Response) => {
     res.status(201).json({ message: 'Verification email sent' })
   } catch (error: any) {
     if (error.code === 11000) {
-      // MongoDB duplicate key error
       return res.status(400).json({ message: 'Email already exists' })
     }
     console.error('Error during sign up:', error)
@@ -104,7 +100,6 @@ router.get('/verify-email', async (req, res) => {
   }
 })
 
-// Sign In Route
 router.post('/signin', async (req: Request, res: Response) => {
   const { email, password } = req.body
   try {
@@ -142,7 +137,6 @@ router.get('/protected', authenticate, async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'User not found' })
     }
 
-    // Send response only once
     return res.json({ message: 'Access granted', user })
   } catch (error) {
     console.error('Error fetching user data:', error)

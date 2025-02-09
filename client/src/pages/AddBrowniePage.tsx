@@ -61,7 +61,7 @@ const AddBrowniePage = () => {
         setFormData({
           task: '',
           category: '',
-          browniePoints: 1, // Reset to default valid value
+          browniePoints: 1,
           top3Day: false,
           top3Week: false,
         })
