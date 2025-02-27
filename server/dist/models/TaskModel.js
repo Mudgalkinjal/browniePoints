@@ -45,6 +45,6 @@ const TaskSchema = new mongoose_1.Schema({
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
-    }, // Reference
+    },
 }, { timestamps: true });
 exports.default = mongoose_1.default.model('Task', TaskSchema);

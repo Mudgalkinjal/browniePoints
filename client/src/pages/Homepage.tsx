@@ -9,7 +9,6 @@ const HomePage = () => {
   }
   function handleSignInNavigate() {
     const authCode = localStorage.getItem('authToken')
-    console.log(authCode)
     !authCode ? navigate('/signin') : navigate('/app')
   }
   return (

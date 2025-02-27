@@ -9,15 +9,12 @@ import { getUserDataByEmail } from '../utils/userHelpers'
 import dotenv from 'dotenv'
 dotenv.config()
 const router = express.Router()
-console.log('inside sign up')
 
 router.get('/', (req: Request, res: Response) => {
   res.send('Auth endpoint is working')
 })
 
 router.post('/signup', async (req: Request, res: Response) => {
-  console.log('inside sign up route')
-
   const { name, email, password } = req.body
   try {
     const existingUser = await User.findOne({ email })

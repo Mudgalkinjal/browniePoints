@@ -19,7 +19,6 @@ const router = express_1.default.Router();
 router.post('/create', authMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { task, category, browniePoints, isTop3Day, isTop3Week } = req.body;
-        // Ensure all required fields are present
         if (!task || !category || browniePoints === undefined) {
             return res.status(400).json({ message: 'Missing required fields' });
         }
@@ -32,7 +31,7 @@ router.post('/create', authMiddleware_1.default, (req, res) => __awaiter(void 0,
             createdBy: req.user.userId,
         });
         yield newTask.save();
-        res.status(201).json(newTask); // Send back the created task
+        res.status(201).json(newTask);
     }
     catch (error) {
         console.error('Error creating task:', error);
@@ -40,7 +39,6 @@ router.post('/create', authMiddleware_1.default, (req, res) => __awaiter(void 0,
     }
 }));
 // ((req as any).user as { userId: string }).userId,
-// Fetch All Tasks
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const tasks = yield TaskModel_1.default.find();
@@ -69,7 +67,6 @@ router.patch('/:id', authMiddleware_1.default, (req, res) => __awaiter(void 0, v
 router.delete('/:id', authMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        // Find and delete the task by its ID
         const deletedTask = yield TaskModel_1.default.findByIdAndDelete(id);
         if (!deletedTask) {
             return res.status(404).json({ message: 'Task not found' });

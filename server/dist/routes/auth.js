@@ -21,16 +21,11 @@ const authMiddleware_1 = __importDefault(require("../middleware/authMiddleware")
 const userHelpers_1 = require("../utils/userHelpers");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-//${process.env.CLIENT_URL}
 const router = express_1.default.Router();
-console.log('inside sign up');
-// Example route
 router.get('/', (req, res) => {
     res.send('Auth endpoint is working');
 });
-// Sign Up Route
 router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('inside sign up route');
     const { name, email, password } = req.body;
     try {
         const existingUser = yield User_1.default.findOne({ email });
@@ -66,7 +61,6 @@ router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
     catch (error) {
         if (error.code === 11000) {
-            // MongoDB duplicate key error
             return res.status(400).json({ message: 'Email already exists' });
         }
         console.error('Error during sign up:', error);
@@ -96,7 +90,6 @@ router.get('/verify-email', (req, res) => __awaiter(void 0, void 0, void 0, func
         return res.redirect(`${process.env.CLIENT_URL}/verify-email?status=invalid-token`);
     }
 }));
-// Sign In Route
 router.post('/signin', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     try {
@@ -128,7 +121,6 @@ router.get('/protected', authMiddleware_1.default, (req, res) => __awaiter(void 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        // Send response only once
         return res.json({ message: 'Access granted', user });
     }
     catch (error) {

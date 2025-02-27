@@ -21,7 +21,6 @@ app.use(cors())
 app.use(express.json())
 
 connectDB()
-console.log('after db connect')
 app.use('/api/auth', authRoutes)
 
 app.use('/api/tasks', taskRoutes)

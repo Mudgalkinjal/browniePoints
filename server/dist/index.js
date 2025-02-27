@@ -21,14 +21,9 @@ transporter_1.default.verify((error, success) => {
 });
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
-// Middleware
 app.use(express_1.default.json());
-// Connect to Database
 (0, db_1.default)();
-console.log('after db connect');
-// Mount the auth routes
 app.use('/api/auth', auth_1.default);
 app.use('/api/tasks', tasks_1.default);
-// Start Server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -16,11 +16,9 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const mongoURI = process.env.MONGO_URI || 'your_mongodb_connection_string_here';
-        // Log a warning if the default placeholder is used
         if (mongoURI === 'your_mongodb_connection_string_here') {
             console.warn('MONGO_URI is not defined. Using placeholder connection string.');
         }
-        // Attempt connection
         yield mongoose_1.default.connect(mongoURI, {});
         console.log('MongoDB connected successfully');
     }
