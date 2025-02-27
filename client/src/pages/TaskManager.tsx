@@ -30,6 +30,11 @@ const TaskManager = () => {
   const [miscTasks, setMiscTasks] = useState<Task[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [showForm, setShowForm] = useState(false)
+  const [showInstructions, setShowInstructions] = useState(true)
+  const [animate, setAnimate] = useState(false)
+  const totalBrowniePoints = allTasks
+    .filter((task) => task.isCompleted)
+    .reduce((sum, task) => sum + task.browniePoints, 0)
   const [formData, setFormData] = useState({
     task: '',
     category: '',
@@ -65,6 +70,15 @@ const TaskManager = () => {
       console.error('Error deleting task:', error)
     }
   }
+  const handleHome = () => {
+    navigate('/app')
+  }
+
+  useEffect(() => {
+    setAnimate(true)
+    const timer = setTimeout(() => setAnimate(false), 800)
+    return () => clearTimeout(timer)
+  }, [totalBrowniePoints])
   // Fetch tasks
   const fetchTasks = async () => {
     try {
@@ -160,7 +174,7 @@ const TaskManager = () => {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData), // Ensure this is a single object
+        body: JSON.stringify(formData),
       })
 
       if (!response.ok) {
@@ -168,8 +182,8 @@ const TaskManager = () => {
         throw new Error(errorData.message || 'Failed to add task')
       }
 
-      const newTask = await response.json() // Assuming the server returns the created task
-      setAllTasks((prev) => [...prev, newTask]) // Add the new task to the list
+      const newTask = await response.json()
+      setAllTasks((prev) => [...prev, newTask])
       setFormData({
         task: '',
         category: '',
@@ -261,23 +275,48 @@ const TaskManager = () => {
       <Header />
 
       <div className="max-w-4xl mx-auto px-4">
+        {/* Go to Homepage Link */}
+        <div className="mb-4">
+          <button
+            onClick={handleHome}
+            className="text-blue-600 hover:underline"
+          >
+            Go to Homepage
+          </button>
+        </div>
         {/* Motivational Quote */}
         <div className="bg-[#f58d774a] p-4 rounded-lg mb-6 shadow hover:shadow-lg transition-all duration-300">
           <p className="text-center text-lg font-semibold text-gray-700 italic">
             "A little progress each day adds up to big results."
           </p>
         </div>
+        {/* Brownie Points Bar */}
+        <div className="bg-white p-2 rounded-lg text-center text-2xl font-bold mb-4 fun-font">
+          Total Brownie Points:{' '}
+          <span className={`inline-block ${animate ? 'bounce-three' : ''}`}>
+            {totalBrowniePoints} 🍫
+          </span>
+        </div>
 
         {/* Instructions */}
-        <section className="bg-[#D4E4DB] p-4 rounded-lg mb-6 shadow-lg">
-          <h2 className="text-xl font-bold text-gray-800 mb-2">How to Use</h2>
-          <ul className="list-disc list-inside text-gray-700">
-            <li>Create tasks with the "Add More Tasks" button.</li>
-            <li>Filter tasks by category using the buttons above.</li>
-            <li>Click on tasks to mark them as completed.</li>
-            <li>Delete tasks if needed.</li>
-          </ul>
-        </section>
+        {showInstructions && (
+          <section className="relative bg-[#D4E4DB] p-4 rounded-lg mb-6 shadow-lg">
+            {/* Cross Button */}
+            <button
+              onClick={() => setShowInstructions(false)}
+              className="absolute top-2 right-2 text-gray-800 hover:text-red-500"
+            >
+              &times;
+            </button>
+            <h2 className="text-xl font-bold text-gray-800 mb-2">How to Use</h2>
+            <ul className="list-disc list-inside text-gray-700">
+              <li>Create tasks with the "Add More Tasks" button.</li>
+              <li>Filter tasks by category using the buttons above.</li>
+              <li>Click on tasks to mark them as completed.</li>
+              <li>Delete tasks if needed.</li>
+            </ul>
+          </section>
+        )}
 
         {/* Category Filter */}
         <div className="mb-8">
@@ -435,7 +474,14 @@ const TaskManager = () => {
                     }
                     className="w-full p-2 border rounded-lg mb-4"
                   >
-                    <option value="true">True</option>
+                    <option
+                      value="true"
+                      disabled={
+                        topTasks.filter((task) => task.isTop3Day).length >= 3
+                      }
+                    >
+                      True
+                    </option>
                     <option value="false">False</option>
                   </select>
                 </div>

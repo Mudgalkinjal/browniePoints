@@ -32,6 +32,10 @@ const Signinpage = () => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
+  const handleSignUp = () => {
+    navigate('/signup')
+  }
+
   const onSubmit = async (data: SigninData) => {
     setError('')
     setSuccess('')
@@ -125,6 +129,12 @@ const Signinpage = () => {
             Sign In
           </button>
         </form>
+        <button
+          onClick={handleSignUp}
+          className="w-full mt-4 bg-gray-100 text-black-400 py-2 px-4 rounded-lg hover:bg-gray-200 hover:text-gray-900 transition-all duration-200"
+        >
+          Don't have an account? Sign Up
+        </button>
       </div>
     </div>
   )

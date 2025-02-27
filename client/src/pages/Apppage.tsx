@@ -9,6 +9,7 @@ const AppPage = () => {
     name: string
     email: string
   } | null>(null)
+  const [tasks, setTasks] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
 
@@ -48,6 +49,29 @@ const AppPage = () => {
     fetchUserData()
   }, [navigate])
 
+  // Fetch tasks data
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const token = localStorage.getItem('authToken')
+        if (!token) throw new Error('No token found')
+        const response = await fetch(`${API_URL}/api/tasks`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        })
+        if (!response.ok) throw new Error('Failed to fetch tasks')
+        const data = await response.json()
+        setTasks(data)
+      } catch (error) {
+        console.error('Error fetching tasks:', error)
+      }
+    }
+
+    fetchTasks()
+  }, [])
+
   if (loading) {
     return <div>Loading...</div>
   }
@@ -55,6 +79,13 @@ const AppPage = () => {
   if (!userData) {
     return <div>Error fetching user data. Please try again later.</div>
   }
+
+  // Calculate totals
+  const totalPoints = tasks
+    .filter((task) => task.isCompleted)
+    .reduce((sum, task) => sum + task.browniePoints, 0)
+  const completeTasksCount = tasks.filter((task) => task.isCompleted).length
+  const incompleteTasksCount = tasks.filter((task) => !task.isCompleted).length
 
   return (
     <div className="min-h-screen bg-[#F7F3EE] pb-10">
@@ -70,6 +101,16 @@ const AppPage = () => {
             Your email: <strong>{userData.email}</strong>
           </p>
         </header>
+
+        {/* Brownie Points Bar */}
+        <div className="bg-[#f58d776e] text-gray-800 first-line:p-2 p-8 rounded-lg text-center text-2xl font-bold mb-4 fun-font">
+          Total Brownie Points Earned:
+          <span className="text-3xl"> {totalPoints} 🍫</span> <br /> <br />
+          Completed Tasks: {completeTasksCount} | Incomplete Tasks:{' '}
+          {incompleteTasksCount} <br />
+          You can still do it—keep pushing!
+        </div>
+
         <div className="flex justify-center">
           <button
             onClick={handleList}
