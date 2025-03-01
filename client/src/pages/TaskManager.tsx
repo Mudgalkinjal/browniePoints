@@ -61,7 +61,6 @@ const TaskManager = () => {
         throw new Error('Failed to delete task')
       }
 
-      // Update the state to reflect the deleted task
       setAllTasks((prevTasks) =>
         prevTasks.filter((task) => task._id !== taskId)
       )
@@ -79,7 +78,6 @@ const TaskManager = () => {
     const timer = setTimeout(() => setAnimate(false), 800)
     return () => clearTimeout(timer)
   }, [totalBrowniePoints])
-  // Fetch tasks
   const fetchTasks = async () => {
     try {
       const token = localStorage.getItem('authToken')
@@ -102,7 +100,6 @@ const TaskManager = () => {
     }
   }
 
-  // Filter tasks based on selected category
   const filterTasks = (tasks: Task[]) => {
     const filtered = selectedCategory
       ? tasks.filter((t) => t.category === selectedCategory)
@@ -132,7 +129,6 @@ const TaskManager = () => {
 
       if (!response.ok) throw new Error('Failed to update task')
 
-      // Update the local state
       const updatedTask = await response.json()
       setAllTasks((prev) =>
         prev.map((task) =>
@@ -160,7 +156,6 @@ const TaskManager = () => {
     }))
   }
 
-  // Add task
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -216,7 +211,6 @@ const TaskManager = () => {
         const data = await response.json()
         setAllTasks(data)
 
-        // Apply filtering based on selected category
         const filtered = selectedCategory
           ? data.filter((t: Task) => t.category === selectedCategory)
           : data
@@ -275,7 +269,6 @@ const TaskManager = () => {
       <Header />
 
       <div className="max-w-4xl mx-auto px-4">
-        {/* Go to Homepage Link */}
         <div className="mb-4">
           <button
             onClick={handleHome}
@@ -284,24 +277,22 @@ const TaskManager = () => {
             Go to Homepage
           </button>
         </div>
-        {/* Motivational Quote */}
+
         <div className="bg-[#f58d774a] p-4 rounded-lg mb-6 shadow hover:shadow-lg transition-all duration-300">
           <p className="text-center text-lg font-semibold text-gray-700 italic">
             "A little progress each day adds up to big results."
           </p>
         </div>
-        {/* Brownie Points Bar */}
-        <div className="bg-white p-2 rounded-lg text-center text-2xl font-bold mb-4 fun-font">
+
+        <div className="bg-white p-2 rounded-lg text-center text-2xl font-bold mb-4">
           Total Brownie Points:{' '}
           <span className={`inline-block ${animate ? 'bounce-three' : ''}`}>
             {totalBrowniePoints} 🍫
           </span>
         </div>
 
-        {/* Instructions */}
         {showInstructions && (
           <section className="relative bg-[#D4E4DB] p-4 rounded-lg mb-6 shadow-lg">
-            {/* Cross Button */}
             <button
               onClick={() => setShowInstructions(false)}
               className="absolute top-2 right-2 text-gray-800 hover:text-red-500"
@@ -318,37 +309,121 @@ const TaskManager = () => {
           </section>
         )}
 
-        {/* Category Filter */}
-        <div className="mb-8">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">
-            Filter by Category:
-          </h3>
-          <div className="flex space-x-2">
+        <div>
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800">
+              Filter by Category:
+            </h3>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-2">
             {Array.from(
               new Set(allTasks.map((t) => t.category || 'Uncategorized'))
             ).map((category) => (
               <button
                 key={category}
                 onClick={() => handleCategoryClick(category)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium shadow hover:shadow-md ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium shadow hover:shadow-md transition-all duration-200 ${
                   selectedCategory === category
                     ? 'bg-[#D4E4DB] hover:bg-[#c5d7cc]'
                     : 'bg-[#d5d5da] hover:bg-gray-300'
-                } transition-all duration-200`}
+                }`}
               >
                 {category?.toString() || 'Uncategorized'}
               </button>
             ))}
           </div>
         </div>
+        <div className="flex flex-1 justify-center mb-4">
+          <button
+            onClick={() => setShowForm((prev) => !prev)}
+            className="bg-[#7f9d89] text-white px-4 py-2 rounded-lg"
+          >
+            {showForm ? 'Hide Form' : 'Add More Tasks'}
+          </button>
+        </div>
 
-        {/* Task Sections */}
-        <div className="flex">
-          {/* Top Tasks */}
-          <section className="bg-[#FFFFFF] shadow-lg rounded-lg p-8 w-6/12 mr-4">
-            <h2 className="text-2xl font-bold text-black-400 mb-4 text-center">
-              Top Priority Tasks
+        {showForm && (
+          <section className="bg-white shadow-lg rounded-lg p-8 my-4">
+            <h2 className="text-xl font-bold text-black-500 mb-4">
+              Add a New Task
             </h2>
+            {successMessage && (
+              <p className="text-green-600">{successMessage}</p>
+            )}
+            {errorMessage && <p className="text-red-600">{errorMessage}</p>}
+            <form onSubmit={handleFormSubmit}>
+              <div className="mb-4">
+                <label className="block mb-2">Task</label>
+                <input
+                  name="task"
+                  value={formData.task}
+                  onChange={(e) => handleInputChange('task', e.target.value)}
+                  className="w-full p-2 border rounded-lg mb-4"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block mb-2">Category</label>
+                <input
+                  name="category"
+                  value={formData.category}
+                  onChange={(e) =>
+                    handleInputChange('category', e.target.value)
+                  }
+                  className="w-full p-2 border rounded-lg mb-4"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block mb-2">Brownie Points</label>
+                <input
+                  name="browniePoints"
+                  type="number"
+                  value={formData.browniePoints}
+                  min={1}
+                  onChange={(e) =>
+                    handleInputChange(
+                      'browniePoints',
+                      parseInt(e.target.value, 10) || 1
+                    )
+                  }
+                  className="w-full p-2 border rounded-lg mb-4"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block mb-2">Top 3 Task</label>
+                <select
+                  value={formData.isTop3Day ? 'true' : 'false'}
+                  onChange={(e) =>
+                    handleInputChange('isTop3Day', e.target.value === 'true')
+                  }
+                  className="w-full p-2 border rounded-lg mb-4"
+                >
+                  <option
+                    value="true"
+                    disabled={
+                      topTasks.filter((task) => task.isTop3Day).length >= 3
+                    }
+                  >
+                    True
+                  </option>
+                  <option value="false">False</option>
+                </select>
+              </div>
+
+              <button
+                type="submit"
+                className="px-4 py-2 bg-[#d5d5da] text-gray-700 rounded-lg shadow hover:bg-gray-300 hover:shadow-md hover:text-gray-900 transition-all duration-200"
+              >
+                Submit Task
+              </button>
+            </form>
+          </section>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <section className="bg-white shadow-lg rounded-lg p-8">
+            <h2 className="text-2xl font-bold text-center mb-4">Top Tasks</h2>
             {topTasks.length === 0 ? (
               <p className="text-gray-500 italic">No top tasks available.</p>
             ) : (
@@ -358,152 +433,85 @@ const TaskManager = () => {
                   onClick={() =>
                     toggleTaskCompletion(task._id, task.isCompleted || false)
                   }
-                  className={`cursor-pointer bg-[#f58d7770] p-4 rounded-lg mb-2 shadow hover:shadow-md transition-all duration-200 ${
+                  className={`cursor-pointer bg-[#f58d7770] p-3 rounded-lg mb-2 shadow hover:shadow-md transition-all duration-200 flex items-center justify-between ${
                     task.isCompleted
                       ? 'bg-[#D4E4DB] line-through text-gray-400'
                       : ''
                   }`}
                 >
-                  <h4 className="text-lg font-semibold">
-                    {task.task || 'Untitled Task'}
-                  </h4>
-                  <p>Category: {task.category || 'No Category'}</p>
-                  <p>Points: {task.browniePoints?.toString() || '0'}</p>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      deleteTask(task._id, setAllTasks)
-                    }}
-                    className="text-xs px-3 py-1 bg-[#d5d5da] text-gray-700 rounded-lg hover:bg-gray-300 hover:text-gray-900 shadow transition-all duration-200"
-                  >
-                    Delete
-                  </button>
+                  <div className="flex flex-col">
+                    <h4 className="text-lg font-semibold">
+                      {task.task || 'Untitled Task'}
+                    </h4>
+                    <p className="text-sm text-gray-600">
+                      Points: {task.browniePoints?.toString() || '0'}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs text-gray-500 italic">
+                      {task.category || 'No Category'}
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        deleteTask(task._id, setAllTasks)
+                      }}
+                      className="text-xs px-2 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 shadow transition-all duration-200"
+                    >
+                      ✕
+                    </button>
+                  </div>
                 </div>
               ))
             )}
-            {/* Miscellaneous Tasks */}
-            <h3 className="text-xl font-semibold text-gray-700 mb-4">
-              Miscellaneous Tasks
-            </h3>
-
-            {miscTasks.map((task) => (
-              <div
-                key={task._id}
-                onClick={() =>
-                  toggleTaskCompletion(task._id, task.isCompleted || false)
-                }
-                className={`cursor-pointer bg-gray-100 p-4 rounded-lg mb-2 ${
-                  task.isCompleted
-                    ? 'bg-gray-200 line-through text-gray-400'
-                    : ''
-                }`}
-              >
-                <h4 className="text-lg font-semibold">
-                  {task.task || 'Untitled Task'}
-                </h4>
-                <p>Category: {task.category || 'No Category'}</p>
-                <p>Points: {task.browniePoints?.toString() || '0'}</p>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    deleteTask(task._id, setAllTasks)
-                  }}
-                  className="text-xs px-3 py-1 bg-[#d5d5da] text-gray-700 rounded-lg hover:bg-gray-300 hover:text-gray-900 shadow transition-all duration-200"
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
           </section>
 
-          {/* Add Task Form */}
-          {showForm && (
-            <section className="bg-[#FFFFFF] shadow-lg rounded-lg p-8 w-4/12">
-              <h2 className="text-xl font-bold text-black-500 mb-4">
-                Add a New Task
-              </h2>
-              {successMessage && (
-                <p className="text-green-600">{successMessage}</p>
-              )}
-              {errorMessage && <p className="text-red-600">{errorMessage}</p>}
-              <form onSubmit={handleFormSubmit}>
-                <div className="mb-4">
-                  <label className="block mb-2">Task</label>
-                  <input
-                    name="task"
-                    value={formData.task}
-                    onChange={(e) => handleInputChange('task', e.target.value)}
-                    className="w-full p-2 border rounded-lg mb-4"
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label className="block mb-2">Category</label>
-                  <input
-                    name="category"
-                    value={formData.category}
-                    onChange={(e) =>
-                      handleInputChange('category', e.target.value)
-                    }
-                    className="w-full p-2 border rounded-lg mb-4"
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label className="block mb-2">Brownie Points</label>
-                  <input
-                    name="browniePoints"
-                    type="number"
-                    value={formData.browniePoints}
-                    min={1}
-                    onChange={(e) =>
-                      handleInputChange(
-                        'browniePoints',
-                        parseInt(e.target.value, 10) || 1
-                      )
-                    }
-                    className="w-full p-2 border rounded-lg mb-4"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block mb-2">Top 3 Task</label>
-                  <select
-                    value={formData.isTop3Day ? 'true' : 'false'}
-                    onChange={(e) =>
-                      handleInputChange('isTop3Day', e.target.value === 'true')
-                    }
-                    className="w-full p-2 border rounded-lg mb-4"
-                  >
-                    <option
-                      value="true"
-                      disabled={
-                        topTasks.filter((task) => task.isTop3Day).length >= 3
-                      }
-                    >
-                      True
-                    </option>
-                    <option value="false">False</option>
-                  </select>
-                </div>
-
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-[#d5d5da] text-gray-700 rounded-lg shadow hover:bg-gray-300 hover:shadow-md hover:text-gray-900 transition-all duration-200"
+          <section className="bg-white shadow-lg rounded-lg p-8">
+            <h2 className="text-2xl font-bold text-center mb-4">Other Tasks</h2>
+            {miscTasks.length === 0 ? (
+              <p className="text-gray-500 italic">
+                No miscellaneous tasks available.
+              </p>
+            ) : (
+              miscTasks.map((task) => (
+                <div
+                  key={task._id}
+                  onClick={() =>
+                    toggleTaskCompletion(task._id, task.isCompleted || false)
+                  }
+                  className={`cursor-pointer bg-[#8adafd70] p-3 rounded-lg mb-2 shadow hover:shadow-md transition-all duration-200 flex items-center justify-between ${
+                    task.isCompleted
+                      ? 'bg-[#D4E4DB] line-through text-gray-400'
+                      : ''
+                  }`}
                 >
-                  Submit Task
-                </button>
-              </form>
-            </section>
-          )}
+                  <div className="flex flex-col">
+                    <h4 className="text-lg font-semibold">
+                      {task.task || 'Untitled Task'}
+                    </h4>
+                    <p className="text-sm text-gray-600">
+                      Points: {task.browniePoints?.toString() || '0'}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs text-gray-500 italic">
+                      {task.category || 'No Category'}
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        deleteTask(task._id, setAllTasks)
+                      }}
+                      className="text-xs px-2 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 shadow transition-all duration-200"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </section>
         </div>
-
-        {/* Toggle Add Task Button */}
-        <button
-          onClick={() => setShowForm((prev) => !prev)}
-          className="mt-4 bg-[#d5d5da] text-gray-700 px-4 py-2 rounded-lg"
-        >
-          {showForm ? 'Hide Form' : 'Add More Tasks'}
-        </button>
       </div>
     </div>
   )
