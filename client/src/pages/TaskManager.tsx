@@ -1,40 +1,30 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useCallback, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState, AppDispatch } from '../state/store'
+import { fetchTasks } from '../state/brownies/tasksSlice'
 import Header from '../components/Header'
 import { useNavigate } from 'react-router-dom'
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001'
-
-interface Task {
-  _id: string
-  task: string
-  category: string
-  browniePoints: number
-  isTop3Day: boolean
-  isTop3Week: boolean
-  createdAt: string
-  updatedAt: string
-  createdBy: string
-  isCompleted?: boolean
-}
+import { updateTaskAPI, deleteTaskAPI, createTaskAPI } from '../api/apiService'
 
 const TaskManager = () => {
+  const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
 
-  const [userData, setUserData] = useState<{
-    name: string
-    email: string
-  } | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [allTasks, setAllTasks] = useState<Task[]>([])
-  const [topTasks, setTopTasks] = useState<Task[]>([])
-  const [miscTasks, setMiscTasks] = useState<Task[]>([])
+  const { tasks, totalBrowniePoints, completedCount, incompletedCount } =
+    useSelector((state: RootState) => state.brownie)
+
+  useEffect(() => {
+    if (tasks.length === 0) {
+      dispatch(fetchTasks())
+    }
+  }, [tasks, dispatch])
+
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [topTasks, setTopTasks] = useState<any[]>([])
+  const [miscTasks, setMiscTasks] = useState<any[]>([])
   const [showForm, setShowForm] = useState(false)
   const [showInstructions, setShowInstructions] = useState(true)
   const [animate, setAnimate] = useState(false)
-  const totalBrowniePoints = allTasks
-    .filter((task) => task.isCompleted)
-    .reduce((sum, task) => sum + task.browniePoints, 0)
   const [formData, setFormData] = useState({
     task: '',
     category: '',
@@ -45,140 +35,75 @@ const TaskManager = () => {
   const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
 
-  const deleteTask = async (
-    taskId: string,
-    setAllTasks: React.Dispatch<React.SetStateAction<Task[]>>
-  ) => {
-    try {
-      const response = await fetch(`${API_URL}/api/tasks/${taskId}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-        },
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to delete task')
-      }
-
-      setAllTasks((prevTasks) =>
-        prevTasks.filter((task) => task._id !== taskId)
-      )
-      fetchTasks()
-    } catch (error) {
-      console.error('Error deleting task:', error)
-    }
-  }
-  const handleHome = () => {
-    navigate('/app')
-  }
-
   useEffect(() => {
     setAnimate(true)
     const timer = setTimeout(() => setAnimate(false), 800)
     return () => clearTimeout(timer)
   }, [totalBrowniePoints])
-  const fetchTasks = async () => {
-    try {
-      const token = localStorage.getItem('authToken')
-      if (!token) throw new Error('No token found')
 
-      const response = await fetch(`${API_URL}/api/tasks`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      })
+  const filterTasks = useCallback(
+    (tasksData: any[]) => {
+      const filtered = selectedCategory
+        ? tasksData.filter((t) => t.category === selectedCategory)
+        : tasksData
+      setTopTasks(filtered.filter((t) => t.isTop3Day || t.isTop3Week))
+      setMiscTasks(filtered.filter((t) => !t.isTop3Day && !t.isTop3Week))
+    },
+    [selectedCategory]
+  )
 
-      if (!response.ok) throw new Error('Failed to fetch tasks')
-      const data = await response.json()
-
-      setAllTasks(data)
-      filterTasks(data)
-    } catch (error) {
-      console.error('Error fetching tasks:', error)
-    }
-  }
-
-  const filterTasks = (tasks: Task[]) => {
-    const filtered = selectedCategory
-      ? tasks.filter((t) => t.category === selectedCategory)
-      : tasks
-    setTopTasks(filtered.filter((t) => t.isTop3Day || t.isTop3Week))
-    setMiscTasks(filtered.filter((t) => !t.isTop3Day))
-  }
+  useEffect(() => {
+    filterTasks(tasks)
+  }, [tasks, filterTasks])
 
   const handleCategoryClick = (category: string) => {
     setSelectedCategory((prev) => (prev === category ? null : category))
-    filterTasks(allTasks)
+  }
+
+  const handleHome = () => {
+    navigate('/app')
   }
 
   const toggleTaskCompletion = async (taskId: string, isCompleted: boolean) => {
     try {
       const token = localStorage.getItem('authToken')
+      const changeReq = { isCompleted: !isCompleted }
       if (!token) throw new Error('No token found')
+      await updateTaskAPI(taskId, changeReq, token)
 
-      const response = await fetch(`${API_URL}/api/tasks/${taskId}`, {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ isCompleted: !isCompleted }),
-      })
-
-      if (!response.ok) throw new Error('Failed to update task')
-
-      const updatedTask = await response.json()
-      setAllTasks((prev) =>
-        prev.map((task) =>
-          task._id === taskId
-            ? { ...task, isCompleted: updatedTask.isCompleted }
-            : task
-        )
-      )
-
-      filterTasks(
-        allTasks.map((task) =>
-          task._id === taskId
-            ? { ...task, isCompleted: updatedTask.isCompleted }
-            : task
-        )
-      )
+      dispatch(fetchTasks())
     } catch (error) {
       console.error('Error updating task:', error)
     }
   }
+
+  const deleteTask = async (taskId: string) => {
+    try {
+      const token = localStorage.getItem('authToken')
+      if (!token) throw new Error('No token found')
+      await deleteTaskAPI(taskId, token)
+      dispatch(fetchTasks())
+    } catch (error) {
+      console.error('Error deleting task:', error)
+    }
+  }
+
   const handleInputChange = (field: string, value: any) => {
-    setFormData((prevData) => ({
-      ...prevData,
+    setFormData((prev) => ({
+      ...prev,
       [field]: value,
     }))
   }
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
     try {
       const token = localStorage.getItem('authToken')
       if (!token) throw new Error('No token found')
+      await createTaskAPI(formData, token)
 
-      const response = await fetch(`${API_URL}/api/tasks/create`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || 'Failed to add task')
-      }
-
-      const newTask = await response.json()
-      setAllTasks((prev) => [...prev, newTask])
+      setSuccessMessage('Task added successfully!')
+      dispatch(fetchTasks())
       setFormData({
         task: '',
         category: '',
@@ -186,88 +111,14 @@ const TaskManager = () => {
         isTop3Day: false,
         isTop3Week: false,
       })
-      setSuccessMessage('Task added successfully!')
-      fetchTasks()
     } catch (error: any) {
       setErrorMessage(error.message || 'An error occurred. Please try again.')
     }
   }
 
-  useEffect(() => {
-    const fetchTasksAndFilter = async () => {
-      try {
-        const token = localStorage.getItem('authToken')
-        if (!token) throw new Error('No token found')
-
-        const response = await fetch(`${API_URL}/api/tasks`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        })
-
-        if (!response.ok) throw new Error('Failed to fetch tasks')
-
-        const data = await response.json()
-        setAllTasks(data)
-
-        const filtered = selectedCategory
-          ? data.filter((t: Task) => t.category === selectedCategory)
-          : data
-
-        setTopTasks(filtered.filter((t: Task) => t.isTop3Day || t.isTop3Week))
-        setMiscTasks(
-          filtered.filter((t: Task) => !t.isTop3Day && !t.isTop3Week)
-        )
-      } catch (error) {
-        console.error('Error fetching tasks:', error)
-      }
-    }
-
-    fetchTasksAndFilter()
-  }, [selectedCategory])
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem('authToken')
-        if (!token) throw new Error('No token found')
-
-        const response = await fetch(`${API_URL}/api/auth/protected`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        })
-
-        if (!response.ok) throw new Error('Failed to fetch user data')
-
-        const data = await response.json()
-        setUserData({ name: data.user.name, email: data.user.email })
-      } catch (error) {
-        console.error('Error fetching user data:', error)
-        navigate('/signin')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchUserData()
-  }, [navigate])
-
-  if (loading) {
-    return <div>Loading...</div>
-  }
-
-  if (!userData) {
-    return <div>Error fetching user data. Please try again later.</div>
-  }
-
   return (
     <div className="min-h-screen bg-[#F7F3EE] pb-10">
       <Header />
-
       <div className="max-w-4xl mx-auto px-4">
         <div className="mb-4">
           <button
@@ -277,20 +128,21 @@ const TaskManager = () => {
             Go to Homepage
           </button>
         </div>
-
         <div className="bg-[#f58d774a] p-4 rounded-lg mb-6 shadow hover:shadow-lg transition-all duration-300">
           <p className="text-center text-lg font-semibold text-gray-700 italic">
             "A little progress each day adds up to big results."
           </p>
         </div>
-
-        <div className="bg-white p-2 rounded-lg text-center text-2xl font-bold mb-4">
-          Total Brownie Points:{' '}
+        <div className="bg-[#f58d776e] text-gray-800 p-8 rounded-lg text-center text-2xl font-bold mb-4">
+          Total Brownie Points Earned:
           <span className={`inline-block ${animate ? 'bounce-three' : ''}`}>
+            {' '}
             {totalBrowniePoints} 🍫
-          </span>
+          </span>{' '}
+          <br /> <br />
+          Completed Tasks: {completedCount} | Incomplete Tasks:{' '}
+          {incompletedCount}
         </div>
-
         {showInstructions && (
           <section className="relative bg-[#D4E4DB] p-4 rounded-lg mb-6 shadow-lg">
             <button
@@ -310,14 +162,12 @@ const TaskManager = () => {
         )}
 
         <div>
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800">
-              Filter by Category:
-            </h3>
-          </div>
+          <h3 className="text-lg font-semibold text-gray-800">
+            Filter by Category:
+          </h3>
           <div className="flex flex-wrap gap-2 mt-2">
             {Array.from(
-              new Set(allTasks.map((t) => t.category || 'Uncategorized'))
+              new Set(tasks.map((t) => t.category || 'Uncategorized'))
             ).map((category) => (
               <button
                 key={category}
@@ -328,11 +178,12 @@ const TaskManager = () => {
                     : 'bg-[#d5d5da] hover:bg-gray-300'
                 }`}
               >
-                {category?.toString() || 'Uncategorized'}
+                {category}
               </button>
             ))}
           </div>
         </div>
+
         <div className="flex flex-1 justify-center mb-4">
           <button
             onClick={() => setShowForm((prev) => !prev)}
@@ -361,7 +212,6 @@ const TaskManager = () => {
                   className="w-full p-2 border rounded-lg mb-4"
                 />
               </div>
-
               <div className="mb-4">
                 <label className="block mb-2">Category</label>
                 <input
@@ -373,7 +223,6 @@ const TaskManager = () => {
                   className="w-full p-2 border rounded-lg mb-4"
                 />
               </div>
-
               <div className="mb-4">
                 <label className="block mb-2">Brownie Points</label>
                 <input
@@ -410,7 +259,6 @@ const TaskManager = () => {
                   <option value="false">False</option>
                 </select>
               </div>
-
               <button
                 type="submit"
                 className="px-4 py-2 bg-[#d5d5da] text-gray-700 rounded-lg shadow hover:bg-gray-300 hover:shadow-md hover:text-gray-900 transition-all duration-200"
@@ -454,7 +302,7 @@ const TaskManager = () => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation()
-                        deleteTask(task._id, setAllTasks)
+                        deleteTask(task._id)
                       }}
                       className="text-xs px-2 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 shadow transition-all duration-200"
                     >
@@ -500,7 +348,7 @@ const TaskManager = () => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation()
-                        deleteTask(task._id, setAllTasks)
+                        deleteTask(task._id)
                       }}
                       className="text-xs px-2 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 shadow transition-all duration-200"
                     >

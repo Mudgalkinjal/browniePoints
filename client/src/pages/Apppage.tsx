@@ -1,42 +1,38 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchTasks } from '../state/brownies/tasksSlice'
+import { fetchProtectedData } from '../api/apiService'
+import { RootState, AppDispatch } from '../state/store'
 
 const AppPage = () => {
   const [userData, setUserData] = useState<{
     name: string
     email: string
   } | null>(null)
-  const [tasks, setTasks] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
+  const dispatch = useDispatch<AppDispatch>()
 
-  function handleList() {
-    navigate('/task-list')
-  }
+  const {
+    totalBrowniePoints,
+    completedCount,
+    incompletedCount,
+    loading: tasksLoading,
+    error,
+  } = useSelector((state: RootState) => state.brownie)
+
+  useEffect(() => {
+    dispatch(fetchTasks())
+  }, [dispatch])
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('authToken')
-        if (!token) {
-          throw new Error('No token found')
-        }
-        const response = await fetch(`${API_URL}/api/auth/protected`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        })
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch user data')
-        }
-
-        const data = await response.json()
+        if (!token) throw new Error('No token found')
+        const data = await fetchProtectedData(token)
         setUserData({ name: data.user.name, email: data.user.email })
       } catch (error) {
         console.error('Error fetching user data:', error)
@@ -45,54 +41,20 @@ const AppPage = () => {
         setLoading(false)
       }
     }
-
     fetchUserData()
   }, [navigate])
 
-  // Fetch tasks data
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const token = localStorage.getItem('authToken')
-        if (!token) throw new Error('No token found')
-        const response = await fetch(`${API_URL}/api/tasks`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        })
-        if (!response.ok) throw new Error('Failed to fetch tasks')
-        const data = await response.json()
-        setTasks(data)
-      } catch (error) {
-        console.error('Error fetching tasks:', error)
-      }
-    }
-
-    fetchTasks()
-  }, [])
-
-  if (loading) {
+  if (loading || tasksLoading) {
     return <div>Loading...</div>
   }
-
-  if (!userData) {
+  if (!userData || error) {
     return <div>Error fetching user data. Please try again later.</div>
   }
-
-  // Calculate totals
-  const totalPoints = tasks
-    .filter((task) => task.isCompleted)
-    .reduce((sum, task) => sum + task.browniePoints, 0)
-  const completeTasksCount = tasks.filter((task) => task.isCompleted).length
-  const incompleteTasksCount = tasks.filter((task) => !task.isCompleted).length
 
   return (
     <div className="min-h-screen bg-[#F7F3EE] pb-10">
       <Header />
-
       <div className="max-w-4xl mx-auto px-4">
-        {/* Header */}
         <header className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800 text-center">
             Welcome, {userData.name}!
@@ -102,25 +64,22 @@ const AppPage = () => {
           </p>
         </header>
 
-        {/* Brownie Points Bar */}
-        <div className="bg-[#f58d776e] text-gray-800 first-line:p-2 p-8 rounded-lg text-center text-2xl font-bold mb-4 fun-font">
+        <div className="bg-[#f58d776e] text-gray-800 p-8 rounded-lg text-center text-2xl font-bold mb-4">
           Total Brownie Points Earned:
-          <span className="text-3xl"> {totalPoints} 🍫</span> <br /> <br />
-          Completed Tasks: {completeTasksCount} | Incomplete Tasks:{' '}
-          {incompleteTasksCount} <br />
-          You can still do it—keep pushing!
+          <span className="text-3xl"> {totalBrowniePoints} 🍫</span> <br />{' '}
+          <br />
+          Completed Tasks: {completedCount} | Incomplete Tasks:{' '}
+          {incompletedCount}
         </div>
 
         <div className="flex justify-center">
           <button
-            onClick={handleList}
+            onClick={() => navigate('/task-list')}
             className="px-4 py-3 m-4 bg-[#D4E4DB] text-gray-700 rounded-lg shadow-md hover:bg-gray-300 hover:shadow-lg transition-all duration-200"
           >
             Go to your List
           </button>
         </div>
-
-        {/* Hero Section */}
         <section className="bg-white shadow-lg rounded-lg p-8 mb-8">
           <h2 className="text-2xl font-bold text-black-400 mb-4 text-center">
             Why Brownie Points?
@@ -148,7 +107,6 @@ const AppPage = () => {
           </ul>
         </section>
 
-        {/* Features Section */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white shadow-lg rounded-lg p-6">
             <h3 className="text-xl font-bold text-gray-800 mb-2">
