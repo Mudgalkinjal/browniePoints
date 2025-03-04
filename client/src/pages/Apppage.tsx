@@ -70,10 +70,10 @@ const AppPage = () => {
             {totalBrowniePoints} <span>🍫</span>
           </p>
           <div className="mt-4 text-lg font-medium">
-            <span className="bg-green-200 px-3 py-1 rounded-lg">
+            <span className="bg-gray-200 px-3 py-1 rounded-lg">
               ✅ Completed: {completedCount}
             </span>
-            <span className="bg-red-200 px-3 py-1 rounded-lg ml-2">
+            <span className="bg-gray-200 px-3 py-1 rounded-lg ml-2">
               ❌ Incomplete: {incompletedCount}
             </span>
           </div>

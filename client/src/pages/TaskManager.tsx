@@ -135,14 +135,18 @@ const TaskManager = () => {
         </div>
         <div className="bg-gradient-to-r from-blue-100 to-blue-300 text-gray-900 p-6 rounded-xl shadow-lg text-center">
           <h2 className="text-3xl font-extrabold mb-2">Total Brownie Points</h2>
-          <p className="text-4xl font-bold text-brown-800 flex items-center justify-center gap-2">
+          <p
+            className={`inline-block ${
+              animate ? 'bounce-three' : ''
+            } text-4xl font-bold text-brown-800 flex items-center justify-center gap-2`}
+          >
             {totalBrowniePoints} <span>🍫</span>
           </p>
           <div className="mt-4 text-lg font-medium">
-            <span className="bg-green-200 px-3 py-1 rounded-lg">
+            <span className="bg-gray-200 px-3 py-1 rounded-lg">
               ✅ Completed: {completedCount}
             </span>
-            <span className="bg-red-200 px-3 py-1 rounded-lg ml-2">
+            <span className="bg-gray-200 px-3 py-1 rounded-lg ml-2">
               ❌ Incomplete: {incompletedCount}
             </span>
           </div>
