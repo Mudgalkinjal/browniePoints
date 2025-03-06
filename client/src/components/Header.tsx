@@ -8,6 +8,7 @@ const Header = () => {
         className="h-48 bg-cover bg-center"
         style={{
           backgroundImage: `url('/headerimg.png')`,
+          backgroundSize: `102%`,
         }}
       ></div>
 
