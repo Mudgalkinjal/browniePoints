@@ -29,7 +29,9 @@ const TaskManager = () => {
   const [topTasks, setTopTasks] = useState<any[]>([])
   const [miscTasks, setMiscTasks] = useState<any[]>([])
   const [showForm, setShowForm] = useState(false)
-  const [showInstructions, setShowInstructions] = useState(true)
+  const [showInstructions, setShowInstructions] = useState(() => {
+    return !localStorage.getItem('instructionsClosed')
+  })
   const [animate, setAnimate] = useState(false)
 
   useEffect(() => {
@@ -83,6 +85,11 @@ const TaskManager = () => {
     }
   }
 
+  const handleInstructionsClose = () => {
+    localStorage.setItem('instructionsClosed', 'true')
+    setShowInstructions(false)
+  }
+
   const handleFormSubmit = async (formData: any) => {
     const token = localStorage.getItem('authToken')
     if (!token) throw new Error('No token found')
@@ -102,7 +109,7 @@ const TaskManager = () => {
             Go to Homepage
           </button>
         </div>
-        <div className="bg-[#f58d774a] p-4 rounded-lg mb-6 shadow hover:shadow-lg transition-all duration-300">
+        <div className="bg-gray-300 p-4 rounded-lg mb-6 shadow hover:shadow-lg transition-all duration-300">
           <p className="text-center text-lg font-semibold text-gray-700 italic">
             "A little progress each day adds up to big results."
           </p>
@@ -114,18 +121,19 @@ const TaskManager = () => {
           incompletedCount={incompletedCount}
           animate={animate}
         />
-        {showInstructions && (
-          <Instructions onClose={() => setShowInstructions(false)} />
+        {showInstructions && <Instructions onClose={handleInstructionsClose} />}
+        {tasks.length !== 0 && (
+          <TaskFilter
+            tasks={tasks}
+            selectedCategory={selectedCategory}
+            onCategoryClick={handleCategoryClick}
+          />
         )}
-        <TaskFilter
-          tasks={tasks}
-          selectedCategory={selectedCategory}
-          onCategoryClick={handleCategoryClick}
-        />
+
         <div className="flex flex-1 justify-center mb-4">
           <button
             onClick={() => setShowForm((prev) => !prev)}
-            className="bg-[#7f9d89] text-white px-4 py-2 rounded-lg"
+            className="bg-[#7f9d89] text-white px-4 py-2  mt-3 rounded-lg"
           >
             {showForm ? 'Hide Form' : 'Add More Tasks'}
           </button>
@@ -133,12 +141,14 @@ const TaskManager = () => {
         {showForm && (
           <TaskForm onSubmit={handleFormSubmit} topTasks={topTasks} />
         )}
-        <TaskList
-          topTasks={topTasks}
-          miscTasks={miscTasks}
-          onToggleCompletion={toggleTaskCompletion}
-          onDelete={deleteTask}
-        />
+        {tasks.length !== 0 && (
+          <TaskList
+            topTasks={topTasks}
+            miscTasks={miscTasks}
+            onToggleCompletion={toggleTaskCompletion}
+            onDelete={deleteTask}
+          />
+        )}
       </div>
     </div>
   )
