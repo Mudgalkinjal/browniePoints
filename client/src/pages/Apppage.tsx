@@ -66,6 +66,7 @@ const AppPage = () => {
           totalBrowniePoints={totalBrowniePoints}
           completedCount={completedCount}
           incompletedCount={incompletedCount}
+          animate={null}
         />
         <div className="flex justify-center">
           <button

@@ -112,6 +112,7 @@ const TaskManager = () => {
           totalBrowniePoints={totalBrowniePoints}
           completedCount={completedCount}
           incompletedCount={incompletedCount}
+          animate={animate}
         />
         {showInstructions && (
           <Instructions onClose={() => setShowInstructions(false)} />
