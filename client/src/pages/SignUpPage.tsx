@@ -12,7 +12,6 @@ type SignUpFormData = {
   confirmPassword: string
 }
 
-// Validation Schema
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
   email: Yup.string()
@@ -61,7 +60,6 @@ const SignUpPage = () => {
       if (!response.ok) {
         setError(responseData.message)
       } else {
-        // Handle success response
         setSuccess(responseData.message)
       }
     } catch (error) {
@@ -76,15 +74,12 @@ const SignUpPage = () => {
           Sign Up
         </h2>
 
-        {/* Error Message */}
         {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
-        {/* Success Message */}
         {success && (
           <div className="text-green-500 text-center mb-4">{success}</div>
         )}
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Name Field */}
           <div className="mb-4">
             <label
               htmlFor="name"
@@ -105,7 +100,6 @@ const SignUpPage = () => {
             )}
           </div>
 
-          {/* Email Field */}
           <div className="mb-4">
             <label
               htmlFor="email"
@@ -126,7 +120,6 @@ const SignUpPage = () => {
             )}
           </div>
 
-          {/* Password Field */}
           <div className="mb-4">
             <label
               htmlFor="password"
@@ -147,7 +140,6 @@ const SignUpPage = () => {
             )}
           </div>
 
-          {/* Confirm Password Field */}
           <div className="mb-4">
             <label
               htmlFor="confirmPassword"
@@ -170,7 +162,6 @@ const SignUpPage = () => {
             )}
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-[#D4E4DB] text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 hover:text-gray-900 transition-all duration-200 shadow-md"
@@ -178,7 +169,6 @@ const SignUpPage = () => {
             Sign Up
           </button>
         </form>
-        {/* Sign In Button */}
         <button
           onClick={handleSignInNavigate}
           className="w-full mt-4 bg-gray-100 text-black-400 py-2 px-4 rounded-lg hover:bg-gray-200 hover:text-gray-900 transition-all duration-200"

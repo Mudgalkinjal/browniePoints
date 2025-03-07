@@ -5,6 +5,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchTasks } from '../state/brownies/tasksSlice'
 import { fetchProtectedData } from '../api/apiService'
 import { RootState, AppDispatch } from '../state/store'
+import {
+  BrowniePointsCard,
+  FeatureSection,
+  UserInfo,
+  WhyBrowniePoints,
+} from '../components/Dashboard'
 
 const AppPage = () => {
   const [userData, setUserData] = useState<{
@@ -55,103 +61,38 @@ const AppPage = () => {
     <div className="min-h-screen bg-[#F7F3EE] pb-10">
       <Header />
       <div className="max-w-4xl mx-auto px-4">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 text-center">
-            Welcome, {userData.name}!
-          </h1>
-          <p className="text-center text-gray-600">
-            Your email: <strong>{userData.email}</strong>
-          </p>
-        </header>
-
-        <div className="bg-gradient-to-r from-blue-100 to-blue-300 text-gray-900 p-6 rounded-xl shadow-lg text-center">
-          <h2 className="text-3xl font-extrabold mb-2">Total Brownie Points</h2>
-          <p className="text-4xl font-bold text-brown-800 flex items-center justify-center gap-2">
-            {totalBrowniePoints} <span>🍫</span>
-          </p>
-          <div className="mt-4 text-lg font-medium">
-            <span className="bg-gray-200 px-3 py-1 rounded-lg">
-              ✅ Completed: {completedCount}
-            </span>
-            <span className="bg-gray-200 px-3 py-1 rounded-lg ml-2">
-              ❌ Incomplete: {incompletedCount}
-            </span>
-          </div>
-        </div>
-
+        <UserInfo name={userData.name} email={userData.email} />
+        <BrowniePointsCard
+          totalBrowniePoints={totalBrowniePoints}
+          completedCount={completedCount}
+          incompletedCount={incompletedCount}
+        />
         <div className="flex justify-center">
           <button
             onClick={() => navigate('/task-list')}
-            className="px-4 py-3 m-4 bg-[#D4E4DB] text-gray-700 rounded-lg shadow-md hover:bg-gray-300 hover:shadow-lg transition-all duration-200"
+            className="px-4 py-3 m-4 bg-[#99c6ac] font-bold text-white rounded-lg shadow-md hover:bg-gray-300 hover:shadow-lg hover:text-gray-700 transition-all duration-200"
           >
             Go to your List
           </button>
         </div>
-        <section className="bg-white shadow-lg rounded-lg p-8 mb-8">
-          <h2 className="text-2xl font-bold text-black-400 mb-4 text-center">
-            Why Brownie Points?
-          </h2>
-          <p className="text-gray-700 leading-relaxed">
-            <strong>Brownie Points</strong> is your companion for boosting
-            productivity, helping you achieve your goals while making the
-            process fun and rewarding. By gamifying your tasks, Brownie Points
-            keeps you motivated and focused.
-          </p>
-          <ul className="list-disc list-inside mt-4 text-gray-700">
-            <li>
-              <strong>Set achievable goals</strong> and track your progress
-              step-by-step.
-            </li>
-            <li>
-              <strong>Earn rewards</strong> for completing tasks to keep you
-              motivated.
-            </li>
-            <li>
-              <strong>Visualize success</strong> with brownie-themed
-              achievements.
-            </li>
-            <li>Stay consistent with reminders and daily points.</li>
-          </ul>
-        </section>
-
+        <WhyBrowniePoints />
         <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-2">
-              Gamify Your Productivity
-            </h3>
-            <p className="text-gray-700">
-              Turn your daily tasks into exciting challenges. Earn brownie
-              points for every completed task, and unlock rewards as you
-              progress.
-            </p>
-          </div>
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-2">
-              Reflect and Celebrate
-            </h3>
-            <p className="text-gray-700">
-              End your day by reflecting on your accomplishments and celebrating
-              your brownie milestones!
-            </p>
-          </div>
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-2">
-              Build Positive Habits
-            </h3>
-            <p className="text-gray-700">
-              Reinforce good habits by staying consistent and earning brownie
-              points daily. Every small step counts toward your success.
-            </p>
-          </div>
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-2">
-              Perfect for Teams
-            </h3>
-            <p className="text-gray-700">
-              Share your progress with teammates and compete for the top spot.
-              Collaborative productivity has never been more fun!
-            </p>
-          </div>
+          <FeatureSection
+            title="Gamify Your Productivity"
+            description="Turn your daily tasks into exciting challenges. Earn brownie points for every completed task, and unlock rewards as you progress."
+          />
+          <FeatureSection
+            title="Reflect and Celebrate"
+            description="End your day by reflecting on your accomplishments and celebrating your brownie milestones!"
+          />
+          <FeatureSection
+            title="Build Positive Habits"
+            description="Reinforce good habits by staying consistent and earning brownie points daily. Every small step counts toward your success."
+          />
+          <FeatureSection
+            title="Perfect for Teams"
+            description="Share your progress with teammates and compete for the top spot. Collaborative productivity has never been more fun!"
+          />
         </section>
       </div>
     </div>

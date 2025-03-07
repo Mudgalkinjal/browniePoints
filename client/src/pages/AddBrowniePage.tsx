@@ -17,7 +17,6 @@ const AddBrowniePage = () => {
   ) => {
     const { name, value, type } = e.target
 
-    // Handle checkbox specifically
     const inputValue =
       type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
 
@@ -31,14 +30,11 @@ const AddBrowniePage = () => {
     const token = localStorage.getItem('authToken')
     e.preventDefault()
 
-    // Reset messages
     setSuccessMessage('')
     setErrorMessage('')
 
-    // Log the form data
     console.log('Submitting:', formData)
 
-    // Validate formData
     if (!formData.task || !formData.category || formData.browniePoints < 1) {
       setErrorMessage('Please fill out all required fields correctly.')
       return
@@ -83,14 +79,12 @@ const AddBrowniePage = () => {
           Add a New Brownie Task
         </h2>
 
-        {/* Success Message */}
         {successMessage && (
           <div className="mb-4 p-3 text-green-700 bg-green-100 rounded">
             {successMessage}
           </div>
         )}
 
-        {/* Error Message */}
         {errorMessage && (
           <div className="mb-4 p-3 text-red-700 bg-red-100 rounded">
             {errorMessage}
@@ -98,7 +92,6 @@ const AddBrowniePage = () => {
         )}
 
         <form onSubmit={handleSubmit}>
-          {/* Task Field */}
           <div className="mb-4">
             <label
               htmlFor="task"
@@ -118,7 +111,6 @@ const AddBrowniePage = () => {
             />
           </div>
 
-          {/* Category Field */}
           <div className="mb-4">
             <label
               htmlFor="category"
@@ -142,7 +134,6 @@ const AddBrowniePage = () => {
             </select>
           </div>
 
-          {/* Brownie Points */}
           <div className="mb-4">
             <label
               htmlFor="browniePoints"
@@ -164,7 +155,6 @@ const AddBrowniePage = () => {
             />
           </div>
 
-          {/* Top 3 of the Day */}
           <div className="mb-4">
             <label className="flex items-center text-gray-700">
               <input
@@ -178,7 +168,6 @@ const AddBrowniePage = () => {
             </label>
           </div>
 
-          {/* Top 3 of the Week */}
           <div className="mb-6">
             <label className="flex items-center text-gray-700">
               <input
@@ -192,7 +181,6 @@ const AddBrowniePage = () => {
             </label>
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition"

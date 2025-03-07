@@ -10,7 +10,6 @@ type SigninData = {
   password: string
 }
 
-// Validation Schema
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email address')
@@ -71,15 +70,12 @@ const Signinpage = () => {
         <h2 className="text-2xl font-bold text-center text-black-400 mb-6">
           Sign In
         </h2>
-        {/* Error Message */}
         {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
-        {/* Success Message */}
         {success && (
           <div className="text-green-500 text-center mb-4">{success}</div>
         )}
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Email Field */}
           <div className="mb-4">
             <label
               htmlFor="email"
@@ -100,7 +96,6 @@ const Signinpage = () => {
             )}
           </div>
 
-          {/* Password Field */}
           <div className="mb-4">
             <label
               htmlFor="password"
@@ -121,7 +116,6 @@ const Signinpage = () => {
             )}
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-[#D4E4DB] text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 hover:text-gray-900 transition-all duration-200"
