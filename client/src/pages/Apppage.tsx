@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchTasks } from '../state/brownies/tasksSlice'
 import { fetchProtectedData } from '../api/apiService'
 import { RootState, AppDispatch } from '../state/store'
+import MenuBar from '../components/MenuBar'
 import {
   BrowniePointsCard,
   FeatureSection,
@@ -59,6 +60,7 @@ const AppPage = () => {
 
   return (
     <div className="min-h-screen bg-[#F7F3EE] pb-10">
+      <MenuBar />
       <Header />
       <div className="max-w-4xl mx-auto px-4">
         <UserInfo name={userData.name} email={userData.email} />

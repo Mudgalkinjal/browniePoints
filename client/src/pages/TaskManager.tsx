@@ -6,6 +6,8 @@ import Header from '../components/Header'
 import { useNavigate } from 'react-router-dom'
 import { updateTaskAPI, deleteTaskAPI, createTaskAPI } from '../api/apiService'
 import { BrowniePointsCard } from '../components/Dashboard'
+import MenuBar from '../components/MenuBar'
+
 import {
   TaskFilter,
   TaskList,
@@ -99,16 +101,9 @@ const TaskManager = () => {
 
   return (
     <div className="min-h-screen bg-[#F7F3EE] pb-10">
+      <MenuBar />
       <Header />
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="mb-4">
-          <button
-            onClick={handleHome}
-            className="text-blue-600 hover:underline"
-          >
-            Go to Homepage
-          </button>
-        </div>
+      <div className="max-w-4xl mx-auto px-4 mt-8">
         <div className="bg-gray-300 p-4 rounded-lg mb-6 shadow hover:shadow-lg transition-all duration-300">
           <p className="text-center text-lg font-semibold text-gray-700 italic">
             "A little progress each day adds up to big results."
@@ -133,7 +128,7 @@ const TaskManager = () => {
         <div className="flex flex-1 justify-center mb-4">
           <button
             onClick={() => setShowForm((prev) => !prev)}
-            className="bg-[#7f9d89] text-white px-4 py-2  mt-3 rounded-lg"
+            className="px-4 py-3 m-4 bg-[#99c6ac] font-bold text-white rounded-lg shadow-md hover:bg-gray-300 hover:shadow-lg hover:text-gray-700 transition-all duration-200"
           >
             {showForm ? 'Hide Form' : 'Add More Tasks'}
           </button>
