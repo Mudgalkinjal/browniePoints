@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState, AppDispatch } from '../state/store'
 import { fetchTasks } from '../state/brownies/tasksSlice'
 import Header from '../components/Header'
-import { useNavigate } from 'react-router-dom'
 import { updateTaskAPI, deleteTaskAPI, createTaskAPI } from '../api/apiService'
 import { BrowniePointsCard } from '../components/Dashboard'
 import MenuBar from '../components/MenuBar'
@@ -17,7 +16,6 @@ import {
 
 const TaskManager = () => {
   const dispatch = useDispatch<AppDispatch>()
-  const navigate = useNavigate()
   const { tasks, totalBrowniePoints, completedCount, incompletedCount } =
     useSelector((state: RootState) => state.brownie)
 
@@ -59,10 +57,6 @@ const TaskManager = () => {
 
   const handleCategoryClick = (category: string) => {
     setSelectedCategory((prev) => (prev === category ? null : category))
-  }
-
-  const handleHome = () => {
-    navigate('/app')
   }
 
   const toggleTaskCompletion = async (taskId: string, isCompleted: boolean) => {
