@@ -28,7 +28,7 @@ const MenuBar = () => {
           </li>
           <li>
             <Link
-              to="/leaderboard"
+              to="/weekly-progress"
               className="relative hover:text-black transition duration-200 after:content-[''] after:absolute after:left-0 after:bottom-[-6px] after:w-full after:h-[2px] after:bg-black after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200"
             >
               Weekly Progress

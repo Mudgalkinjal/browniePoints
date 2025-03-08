@@ -7,7 +7,7 @@ import Signinpage from './pages/Signinpage'
 import Apppage from './pages/Apppage'
 import AddBrownie from './pages/AddBrowniePage'
 import TaskList from './pages/TaskManager'
-
+import WeeklyProgress from './pages/WeeklyProgress'
 import VerifyEmail from './pages/VerifyEmail'
 import ProtectedRoute from './components/ProtectedRoutes'
 
@@ -41,6 +41,14 @@ function App() {
           element={
             <ProtectedRoute>
               <TaskList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/weekly-progress"
+          element={
+            <ProtectedRoute>
+              <WeeklyProgress />
             </ProtectedRoute>
           }
         />
