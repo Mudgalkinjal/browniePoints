@@ -1,35 +1,5 @@
 import React from 'react'
-// export interface Task {
-//     _id: string
-//     task: string
-//     category: string
-//     tasks: number
-//     isTop3Day: boolean
-//     isTop3Week: boolean
-//     createdAt: string
-//     updatedAt: string
-//     createdBy: string
-//     isCompleted?: boolean
-//     browniePoints: number
-//   }
 
-//   interface TasksState {
-//     tasks: Task[]
-//     totalBrowniePoints: number
-//     completedCount: number
-//     incompletedCount: number
-//     loading: boolean
-//     error: string | null
-//   }
-
-//   const initialState: TasksState = {
-//     tasks: [],
-//     totalBrowniePoints: 0,
-//     completedCount: 0,
-//     incompletedCount: 0,
-//     loading: false,
-//     error: null,
-//   }
 export interface Task {
   _id: string
   task: string
